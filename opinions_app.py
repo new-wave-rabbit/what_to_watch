@@ -7,7 +7,7 @@ from random import randrange
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static_dir')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 
@@ -21,6 +21,11 @@ class Opinion(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 
+@app.route('/add')
+def add_opinion_view():
+    return 'Страница в разработке!'
+
+
 @app.route('/')
 def index_view():
     quantity = Opinion.query.count()
@@ -32,6 +37,9 @@ def index_view():
     opinion = Opinion.query.offset(offset_value).first()
     # Передать в шаблон весь объект opinion.
     return render_template('index.html', opinion=opinion)
+
+
+
 
 if __name__ == '__main__':
     app.run()
