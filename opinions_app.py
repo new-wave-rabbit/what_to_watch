@@ -20,15 +20,18 @@ class Opinion(db.Model):
     source = db.Column(db.String(256))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
+
 @app.route('/')
 def index_view():
     quantity = Opinion.query.count()
     if not quantity:
         return 'В базе данных мнений о фильмах нет.'
     offset_value = randrange(quantity)
+    # Извлечь все записи, пропуская первые offset_value записей
+    # и взять первую запись из получившегося набора.
     opinion = Opinion.query.offset(offset_value).first()
-    # Вот он — возврат функции.
-    return render_template('index.html')
+    # Передать в шаблон весь объект opinion.
+    return render_template('index.html', opinion=opinion)
 
 if __name__ == '__main__':
     app.run()
