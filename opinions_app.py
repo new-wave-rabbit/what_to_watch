@@ -1,7 +1,9 @@
 # what_to_watch/opinions_app.py
 
-# Новый импорт.
 from datetime import datetime
+
+# Импортировать функцию для выбора случайного значения.
+from random import randrange
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -21,7 +23,17 @@ class Opinion(db.Model):
 
 @app.route('/')
 def index_view():
-    return 'Совсем скоро тут будет случайное мнение о фильме!'
+    # Определить количество мнений в базе данных.
+    quantity = Opinion.query.count()
+    # Если мнений нет...
+    if not quantity:
+        # ...то вернуть сообщение:
+        return 'В базе данных мнений о фильмах нет.'
+    # Иначе выбрать случайное число в диапазоне от 0 до quantity...
+    offset_value = randrange(quantity)
+    # ...и определить случайный объект.
+    opinion = Opinion.query.offset(offset_value).first()
+    return opinion.text
 
 
 if __name__ == '__main__':
