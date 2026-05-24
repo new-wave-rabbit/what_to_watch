@@ -3,7 +3,7 @@
 from datetime import datetime
 from random import randrange
 
-from flask import Flask, flash, redirect, render_template, url_for
+from flask import Flask, abort, flash, redirect, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 from flask_wtf import FlaskForm
@@ -47,7 +47,9 @@ class OpinionForm(FlaskForm):
 def index_view():
     quantity = Opinion.query.count()
     if not quantity:
-        return 'В базе данных записей нет.'
+        # Если в базе пусто - при запросе к главной странице
+        # пользователь увидит ошибку 500.
+        abort(500)
     offset_value = randrange(quantity)
     opinion = Opinion.query.offset(offset_value).first()
     return render_template('opinion.html', opinion=opinion)
