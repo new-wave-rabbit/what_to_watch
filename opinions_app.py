@@ -1,5 +1,6 @@
 from datetime import datetime
 from random import randrange
+from os import getenv
 
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
@@ -11,7 +12,7 @@ from wtforms.validators import DataRequired, Length, Optional
 app = Flask(__name__, static_folder='static_dir')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-
+app.config['SECRET_KEY'] = getenv('SECRET_KEY', 'MY SECRET KEY')
 db = SQLAlchemy(app)
 
 
@@ -47,7 +48,7 @@ class OpinionForm(FlaskForm):
     submit = SubmitField('Добавить')
 
 
-@app.route('/add')
+@app.route('/add', methods=['GET', 'POST'])
 def add_opinion_view():
     form = OpinionForm()
     return render_template('add_opinion.html', form=form)
