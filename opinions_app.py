@@ -2,7 +2,7 @@ from datetime import datetime
 from random import randrange
 from os import getenv
 
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, URLField
@@ -51,6 +51,22 @@ class OpinionForm(FlaskForm):
 @app.route('/add', methods=['GET', 'POST'])
 def add_opinion_view():
     form = OpinionForm()
+    # Если ошибок не возникло...
+    if form.validate_on_submit():
+        # ...то нужно создать новый экземпляр класса Opinion...
+        opinion = Opinion(
+            # ...и передать в него данные, полученные из формы.
+            title=form.title.data,
+            text=form.text.data,
+            source=form.source.data
+        )
+        # Затем добавить его в сессию работы с базой данных...
+        db.session.add(opinion)
+        # ...и зафиксировать изменения.
+        db.session.commit()
+        # Затем переадресовать пользователя на страницу добавленного мнения.
+        return redirect(url_for('opinion_view', id=opinion.id))
+    # Если валидация не пройдена - просто отрисовать страницу с формой.
     return render_template('add_opinion.html', form=form)
 
 
