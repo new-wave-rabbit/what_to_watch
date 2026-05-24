@@ -49,7 +49,8 @@ class OpinionForm(FlaskForm):
 
 @app.route('/add')
 def add_opinion_view():
-    return render_template('add_opinion.html')
+    form = OpinionForm()
+    return render_template('add_opinion.html', form=form)
 
 
 @app.route('/opinions/<int:id>')
