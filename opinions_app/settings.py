@@ -6,3 +6,5 @@ class Config(object):
     SECRET_KEY = os.getenv('SECRET_KEY')
     JSON_AS_ASCII = False
     JSON_PROVIDER_CLASS = None
+    DROPBOX_TOKEN = os.getenv('DROPBOX_TOKEN') 
+
