@@ -41,6 +41,7 @@ def upload_files_to_dropbox(images):
                 # Передать файл в виде бинарных данных.
                 data=image.read()
             )
+            print(response.text)
             # Получить путь до файла из ответа от API.
             path = response.json()['path_lower']
             # Отправить второй запрос на формирование ссылки.
@@ -53,6 +54,7 @@ def upload_files_to_dropbox(images):
                 },
                 json={'path': path}
             )
+            print(response.text)
             data = response.json()
             # Проверить, есть ли ключ url на верхнем уровне ответа.
             if 'url' not in data:
